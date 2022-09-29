@@ -4,18 +4,66 @@ import { loggerLink } from "@trpc/client/links/loggerLink";
 import { withTRPC } from "@trpc/next";
 import { SessionProvider } from "next-auth/react";
 import superjson from "superjson";
-import type { AppType } from "next/app";
+import type { AppType } from "next/dist/shared/lib/utils";
 import type { AppRouter } from "../server/router";
+import { themeChange } from 'theme-change'
+import { useEffect } from 'react';
 import type { Session } from "next-auth";
+import dynamic from 'next/dynamic'
 import "../styles/globals.css";
 
-const MyApp: AppType<{ session: Session | null }> = ({
+const Header = dynamic(
+  () => import('../components/Header'),
+  { ssr: false }
+)
+
+//wagmi.
+import { WagmiConfig, createClient, configureChains, chain } from 'wagmi'
+import { publicProvider } from 'wagmi/providers/public';
+import { infuraProvider } from 'wagmi/providers/infura'
+//rainbow kit UI framework.
+import '@rainbow-me/rainbowkit/styles.css';
+import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
+import Footer from "../components/Footer";
+
+const { chains, provider, webSocketProvider } = configureChains(
+  [chain.mainnet, chain.rinkeby, chain.polygon],
+  [infuraProvider({ apiKey: process.env.INFURA_API_KEY }), publicProvider()]
+)
+
+const { connectors } = getDefaultWallets({
+  appName: 'Greengo',
+  chains
+});
+
+
+const wagmiClient = createClient({
+  autoConnect: true,
+  connectors,
+  provider,
+  webSocketProvider,
+})
+
+const MyApp: AppType = ({
   Component,
   pageProps: { session, ...pageProps },
-}) => {
+}: { Component: any, pageProps: any }) => {
+
+  useEffect(() => {
+    themeChange(false)
+  }, [])
+
   return (
     <SessionProvider session={session}>
-      <Component {...pageProps} />
+      <WagmiConfig client={wagmiClient}>
+        <RainbowKitProvider chains={chains}>
+          <div className="bg-base-100">
+            <Header />
+            <Component {...pageProps} />
+            <Footer />
+          </div>
+        </RainbowKitProvider>
+      </WagmiConfig>
     </SessionProvider>
   );
 };

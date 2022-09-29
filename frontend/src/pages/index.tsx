@@ -3,7 +3,7 @@ import Head from "next/head";
 import FrontHero from "../components/FrontHero";
 import Partners from "../components/Partners";
 import ProjectsCollection from "../components/ProjectsCollection";
-
+import FAQ from "../components/FAQ";
 
 const Home: NextPage = () => {
   return (
@@ -34,6 +34,9 @@ const Home: NextPage = () => {
                 <ProjectsCollection />
               </div>
             </div>
+          </section>
+          <section className="mb-10">
+            <FAQ />
           </section>
         </div>
       </main>

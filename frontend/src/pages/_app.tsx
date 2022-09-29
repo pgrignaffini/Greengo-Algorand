@@ -61,7 +61,7 @@ const Alfajores: Chain = {
   blockExplorers: {
     default: { name: 'AlfajoresCeloExplorer', url: 'https://alfajores-blockscout.celo-testnet.org/' },
   },
-  testnet: false,
+  testnet: true,
 }
 
 const { chains, provider, webSocketProvider } = configureChains([Celo, Alfajores],

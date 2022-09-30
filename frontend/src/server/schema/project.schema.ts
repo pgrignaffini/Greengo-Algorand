@@ -6,6 +6,12 @@ export const createProjectSchema = z.object({
     image: z.string(),
     banner: z.string(),
     description: z.string().min(1),
+    website: z.string().url(),
+    twitter: z.string().url(),
+    discord: z.string().url(),
+    start: z.string(),
+    end: z.string(),
+    goal: z.number().min(1),
 })
 
 export type CreateProjectInput = z.TypeOf<typeof createProjectSchema>;

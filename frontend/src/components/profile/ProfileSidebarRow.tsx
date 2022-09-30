@@ -9,9 +9,9 @@ interface Props {
 function ProfileSidebarRow({ Icon, title, onClick }: Props) {
     return (
         <div onClick={() => onClick?.()} className="flex max-w-fit items-center space-x-2 px-4 py-3 cursor-pointer 
-        rounded-full hover:bg-info transition-all duration-200 group">
+        rounded-full hover:bg-secondary transition-all duration-200 group">
             <Icon className="h-6 w-6" />
-            <p className="hidden text-base font-light md:inline-flex lg:text-xl group-hover:text-info">{title}</p>
+            <p className="hidden text-base font-light md:inline-flex lg:text-xl">{title}</p>
         </div>
     )
 }

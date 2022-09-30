@@ -69,6 +69,12 @@ model Project {
     banner      String?
     description String
     creatorId   String
+    start       DateTime
+    end         DateTime
+    goal        Int
+    discord     String?
+    twitter     String?
+    website     String?
     creator     User      @relation(fields: [creatorId], references: [id], onDelete: Cascade)
     comments    Comment[]
     createdAt   DateTime  @default(now())

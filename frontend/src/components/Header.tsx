@@ -53,6 +53,9 @@ function Header() {
                 }
                 {session &&
                     (<div className="flex space-x-2 items-center">
+                        <Link href="/profile">
+                            <a className="btn btn-sm btn-outline btn-primary normal-case">Profile</a>
+                        </Link>
                         <button className="btn btn-sm btn-outline btn-primary normal-case" onClick={() => signOut()}>
                             <p>Sign Out</p>
                         </button>

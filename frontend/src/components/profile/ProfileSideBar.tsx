@@ -1,4 +1,4 @@
-import { BellIcon, BookmarkIcon, PlusCircleIcon, UserCircleIcon, MailIcon } from '@heroicons/react/outline'
+import { BellIcon, BookmarkIcon, PlusCircleIcon, UserCircleIcon, MailIcon, CollectionIcon } from '@heroicons/react/outline'
 import ProfileSidebarRow from './ProfileSidebarRow';
 
 function ProfileSidebar({ setSelectedTab }: { setSelectedTab: any }) {
@@ -10,6 +10,8 @@ function ProfileSidebar({ setSelectedTab }: { setSelectedTab: any }) {
             <ProfileSidebarRow Icon={MailIcon} title="Messages" />
             <ProfileSidebarRow Icon={BookmarkIcon} title="Favorites" />
             <ProfileSidebarRow Icon={PlusCircleIcon} title="Create project" onClick={() => setSelectedTab("create-project")} />
+            <ProfileSidebarRow Icon={CollectionIcon} title="Your projects" />
+
         </div>
     )
 }

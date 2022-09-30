@@ -11,6 +11,7 @@ import { useEffect } from 'react';
 import type { Session } from "next-auth";
 import dynamic from 'next/dynamic'
 import "../styles/globals.css";
+import { Toaster } from 'react-hot-toast';
 
 const Header = dynamic(
   () => import('../components/Header'),
@@ -101,6 +102,7 @@ const MyApp: AppType = ({
     <SessionProvider session={session}>
       <WagmiConfig client={wagmiClient}>
         <RainbowKitProvider chains={chains}>
+          <Toaster />
           <div className="bg-base-100">
             <Header />
             <Component {...pageProps} />

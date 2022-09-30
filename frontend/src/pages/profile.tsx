@@ -3,6 +3,7 @@ import ProfileBody from "../components/profile/ProfileBody";
 import ProfileHeader from "../components/profile/ProfileHeader";
 import ProfileSidebar from "../components/profile/ProfileSideBar";
 import { useState } from "react";
+import CreateProject from "../components/profile/CreateProject";
 
 const ProfilePage: NextPage = () => {
 
@@ -14,13 +15,13 @@ const ProfilePage: NextPage = () => {
                 <ProfileSidebar setSelectedTab={setSelectedTab} />
             </div>
             {selectedTab === "profile" &&
-                <div className="col-span-2 mt-36 bg-primary rounded-3xl shadow-xl">
+                <div className="col-span-2 mt-36 bg-secondary rounded-3xl shadow-xl">
                     <ProfileHeader />
                     <ProfileBody />
                 </div>}
             {selectedTab === "create-project" &&
-                <div className="col-span-2 mt-36 bg-primary rounded-3xl shadow-xl">
-                    <h1 className="font-bold text-xl font-poppins p-4">Create Project</h1>
+                <div className="col-span-2 mt-36 bg-base-100 border-2 border-secondary rounded-3xl shadow-xl">
+                    <CreateProject />
                 </div>}
         </div>
     )

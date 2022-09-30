@@ -39,9 +39,9 @@ function Header() {
                         <a className="text-primary font-montserrat text-xl">FAQ</a>
                     </Link>
                 </div>
-                <div>
+                {/* <div>
                     <ChangeTheme />
-                </div>
+                </div> */}
                 {isConnected ?
                     (<>
                         <button className="btn btn-sm btn-outline btn-primary normal-case" onClick={openAccountModal}><p>Account</p></button>

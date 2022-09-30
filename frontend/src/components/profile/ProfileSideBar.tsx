@@ -1,5 +1,5 @@
 import { BellIcon, BookmarkIcon, PlusCircleIcon, UserCircleIcon, MailIcon } from '@heroicons/react/outline'
-import ProfileSidebarRow from './ProfileSideBarRow';
+import ProfileSidebarRow from './ProfileSidebarRow';
 
 function ProfileSidebar({ setSelectedTab }: { setSelectedTab: any }) {
 

@@ -1,8 +1,8 @@
-import Logo from "./Logo"
+import Logo from "./logos/Logo"
 
 function Footer() {
     return (
-        <footer className="footer footer-center p-8 bg-neutral mt-24 text-base-100">
+        <footer className="footer footer-center p-8 bg-neutral mt-24 z-0 text-base-100">
             <div>
                 <div className="w-24"><Logo /></div>
                 <p className="mt-4">Copyright © 2022 - All right reserved</p>

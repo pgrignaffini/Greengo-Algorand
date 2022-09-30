@@ -44,9 +44,7 @@ function Header() {
                 </div> */}
                 {isConnected ?
                     (<>
-                        <button className="btn btn-sm btn-outline btn-primary normal-case" onClick={openAccountModal}><p>Account</p></button>
                         <button className="btn btn-sm btn-outline btn-primary normal-case" onClick={openChainModal}><p>Chain</p></button>
-
                     </>)
                     :
                     (<button className="p-2 rounded-md bg-gradient-to-tr from-primary to-secondary shadow-md" onClick={openConnectModal}>
@@ -58,14 +56,14 @@ function Header() {
                         <button className="btn btn-sm btn-outline btn-primary normal-case" onClick={() => signOut()}>
                             <p>Sign Out</p>
                         </button>
-                        <img src={session?.user?.image as string} className="peer rounded-full w-8 h-8 cursor-pointer" />
+                        <img src={session?.user?.image as string} className="peer rounded-full w-8 h-8 cursor-pointer" onClick={openAccountModal} />
                     </div>)}
                 {isConnected && !session &&
                     (<div className="flex space-x-2 items-center">
                         <button className="btn btn-sm btn-outline btn-primary ml-3 normal-case" onClick={() => signIn("discord")}>
                             Sign In
                         </button>
-                        <img src={makeBlockie(address as string)} className="peer rounded-full w-8 h-8 cursor-pointer" />
+                        <img src={makeBlockie(address as string)} className="peer rounded-full w-8 h-8 cursor-pointer" onClick={openAccountModal} />
                     </div>)
                 }
             </div>

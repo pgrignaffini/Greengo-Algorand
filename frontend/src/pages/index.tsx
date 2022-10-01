@@ -4,6 +4,7 @@ import FrontHero from "../components/FrontHero";
 import Partners from "../components/Partners";
 import ProjectsCollection from "../components/ProjectsCollection";
 import FAQ from "../components/FAQ";
+import FAQRow from "../components/FAQRow";
 
 const Home: NextPage = () => {
   return (

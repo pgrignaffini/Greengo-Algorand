@@ -77,6 +77,10 @@ export const projectRouter = createRouter()
     })
     .query('all-projects', {
         resolve({ ctx }) {
-            return ctx.prisma.project.findMany()
+            return ctx.prisma.project.findMany({
+                orderBy: {
+                    createdAt: 'desc',
+                },
+            })
         }
     })

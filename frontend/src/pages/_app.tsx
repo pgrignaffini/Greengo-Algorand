@@ -30,6 +30,7 @@ import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 import '@rainbow-me/rainbowkit/styles.css';
 import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import Footer from "../components/Footer";
+import { SkeletonTheme } from "react-loading-skeleton";
 
 const Celo: Chain = {
   id: 0xa4ec,
@@ -104,13 +105,15 @@ const MyApp: AppType = ({
     <SessionProvider session={session}>
       <WagmiConfig client={wagmiClient}>
         <RainbowKitProvider chains={chains}>
-          <Toaster />
-          <div className="bg-base-100">
-            <Header />
-            <Component {...pageProps} />
-            <Footer />
-          </div>
-          <ReactQueryDevtools initialIsOpen={false} />
+          <SkeletonTheme baseColor="#a7ffa4" highlightColor="#d3ffd8" >
+            <Toaster />
+            <div className="bg-base-100">
+              <Header />
+              <Component {...pageProps} />
+              <Footer />
+            </div>
+            <ReactQueryDevtools initialIsOpen={false} />
+          </SkeletonTheme>
         </RainbowKitProvider>
       </WagmiConfig>
     </SessionProvider>

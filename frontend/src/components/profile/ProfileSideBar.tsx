@@ -10,8 +10,7 @@ function ProfileSidebar({ setSelectedTab }: { setSelectedTab: any }) {
             <ProfileSidebarRow Icon={MailIcon} title="Messages" />
             <ProfileSidebarRow Icon={BookmarkIcon} title="Favorites" />
             <ProfileSidebarRow Icon={PlusCircleIcon} title="Create project" onClick={() => setSelectedTab("create-project")} />
-            <ProfileSidebarRow Icon={CollectionIcon} title="Your projects" />
-
+            <ProfileSidebarRow Icon={CollectionIcon} title="Your projects" onClick={() => setSelectedTab("your-projects")} />
         </div>
     )
 }

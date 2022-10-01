@@ -12,6 +12,8 @@ import type { Session } from "next-auth";
 import dynamic from 'next/dynamic'
 import "../styles/globals.css";
 import { Toaster } from 'react-hot-toast';
+import { ReactQueryDevtools } from 'react-query/devtools'
+
 
 const Header = dynamic(
   () => import('../components/Header'),
@@ -108,6 +110,7 @@ const MyApp: AppType = ({
             <Component {...pageProps} />
             <Footer />
           </div>
+          <ReactQueryDevtools initialIsOpen={false} />
         </RainbowKitProvider>
       </WagmiConfig>
     </SessionProvider>

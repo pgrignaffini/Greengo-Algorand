@@ -32,7 +32,7 @@ function Header() {
                     <Link href={"/collections"}>
                         <a className="text-primary font-montserrat text-xl">Creators</a>
                     </Link>
-                    <Link href={"/"}>
+                    <Link href={"/projects"}>
                         <a className="text-primary font-montserrat text-xl">Projects</a>
                     </Link>
                     <Link href={"/"}>

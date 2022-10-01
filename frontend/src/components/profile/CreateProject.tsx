@@ -2,7 +2,7 @@ import { useState, useRef } from 'react'
 import type { MutableRefObject } from 'react'
 import { useForm } from 'react-hook-form';
 import { create } from 'ipfs-http-client';
-import { GlobeAltIcon, PencilIcon, XCircleIcon } from "@heroicons/react/outline"
+import { GlobeAltIcon, PencilIcon, XCircleIcon, MailIcon } from "@heroicons/react/outline"
 import Discord from "../logos/Discord"
 import Twitter from "../logos/Twitter"
 import toast from "react-hot-toast"
@@ -83,60 +83,58 @@ function CreateProject() {
             id: "project-toast",
         })
 
-        try {
+        let bannerUrl = ''
+        let logoUrl = ''
 
-            let bannerUrl = ''
-            let logoUrl = ''
+        if (bannerToIpfs) {
+            const added = await ipfsClient.add(bannerToIpfs)
+            console.log(added)
+            bannerUrl = `https://greengo.infura-ipfs.io/ipfs/${added.path}`
+        }
 
-            if (bannerToIpfs) {
-                const added = await ipfsClient.add(bannerToIpfs)
-                console.log(added)
-                bannerUrl = `https://greengo.infura-ipfs.io/ipfs/${added.path}`
-            }
+        if (logoToIpfs) {
+            const added = await ipfsClient.add(bannerToIpfs)
+            console.log(added)
+            logoUrl = `https://greengo.infura-ipfs.io/ipfs/${added.path}`
+        }
 
-            if (logoToIpfs) {
-                const added = await ipfsClient.add(bannerToIpfs)
-                console.log(added)
-                logoUrl = `https://greengo.infura-ipfs.io/ipfs/${added.path}`
-            }
+        createProject.mutate({
+            name: data.name,
+            email: data.email,
+            image: logoUrl,
+            banner: bannerUrl,
+            description: data.description,
+            website: data.website,
+            twitter: data.twitter,
+            discord: data.discord,
+            start: data.start,
+            end: data.end,
+            goal: data.goal,
+        });
 
-            createProject.mutate({
-                name: data.name,
-                email: data.email,
-                image: logoUrl,
-                banner: bannerUrl,
-                description: data.description,
-                website: data.website,
-                twitter: data.twitter,
-                discord: data.discord,
-                start: data.start,
-                end: data.end,
-                goal: data.goal,
-            });
-
-
-            toast.success("Project created!", {
+        if (createProject.error) {
+            toast.error("Whoops! Something went wrong.", {
                 id: "project-toast",
             })
-        } catch (error) {
-            toast.error("Whoops! Something went wrong.", {
+        } else {
+            toast.success("Project created!", {
                 id: "project-toast",
             })
         }
 
-        setValue("name", "")
-        setValue("email", "")
-        setValue("description", "")
-        setValue("website", "")
-        setValue("twitter", "")
-        setValue("discord", "")
-        setValue("start", "")
-        setValue("end", "")
-        setValue("goal", "")
-        setLogo("")
-        setBanner("")
-        setLogoToIpfs("")
-        setBannerToIpfs("")
+        // setValue("name", "")
+        // setValue("email", "")
+        // setValue("description", "")
+        // setValue("website", "")
+        // setValue("twitter", "")
+        // setValue("discord", "")
+        // setValue("start", "")
+        // setValue("end", "")
+        // setValue("goal", "")
+        // setLogo("")
+        // setBanner("")
+        // setLogoToIpfs("")
+        // setBannerToIpfs("")
     })
 
 
@@ -233,6 +231,14 @@ function CreateProject() {
                             {...register('twitter', { required: false })}
                             className='border-b-2 flex-1 border-base-200 bg-base-100 p-2 outline-none placeholder:italic' type="text" placeholder="Project Twitter" />
                     </div>
+                    <div className='flex space-x-3 items-center'>
+                        <div className='w-6 h-6'>
+                            <MailIcon className='text-secondary' />
+                        </div>
+                        <input
+                            {...register('email', { required: false })}
+                            className='border-b-2 flex-1 border-base-200 bg-base-100 p-2 outline-none placeholder:italic' type="text" placeholder="Project Email" />
+                    </div>
                 </div>
                 {Object.keys(errors).length > 0 && (
                     <div className='space-y-2 p-2 text-error'>
@@ -242,8 +248,21 @@ function CreateProject() {
                         {errors.description?.type === 'required' && (
                             <p>- A project description is required</p>
                         )}
+                        {errors.start?.type === 'required' && (
+                            <p>- A start date is required</p>
+                        )}
+                        {errors.end?.type === 'required' && (
+                            <p>- An end date is required</p>
+                        )}
+                        {errors.goal?.type === 'required' && (
+                            <p>- A goal is required</p>
+                        )}
                     </div>
                 )}
+                {!!watch('name') && !!watch('description') && !!watch('start') && !!watch('end') && !!watch('goal') &&
+                    <button className='flex mx-auto btn btn-primary mt-8' type="submit">
+                        Create project
+                    </button>}
             </form >
         </div >
     )

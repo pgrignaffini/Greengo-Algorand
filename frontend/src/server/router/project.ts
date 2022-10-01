@@ -1,5 +1,5 @@
 import { createRouter } from "./context";
-import { createProjectSchema, getSingleProjectSchema } from "../schema/project.schema";
+import { createProjectSchema, getSingleProjectSchema, getUserProjectsSchema } from "../schema/project.schema";
 import * as trpc from "@trpc/server"
 
 export const projectRouter = createRouter()
@@ -55,5 +55,28 @@ export const projectRouter = createRouter()
                     }
                 }
             })
+        }
+    })
+    .query('user-projects', {
+        input: getUserProjectsSchema,
+        resolve({ ctx, input }) {
+            return ctx.prisma.project.findMany({
+                where: {
+                    creatorId: input.creatorId
+                },
+                include: {
+                    creator: true,
+                    comments: {
+                        orderBy: {
+                            createdAt: 'desc',
+                        },
+                    }
+                }
+            })
+        }
+    })
+    .query('all-projects', {
+        resolve({ ctx }) {
+            return ctx.prisma.project.findMany()
         }
     })

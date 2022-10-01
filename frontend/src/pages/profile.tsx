@@ -4,6 +4,7 @@ import ProfileHeader from "../components/profile/ProfileHeader";
 import ProfileSidebar from "../components/profile/ProfileSideBar";
 import { useState } from "react";
 import CreateProject from "../components/profile/CreateProject";
+import YourProjects from "../components/profile/YourProjects";
 
 const ProfilePage: NextPage = () => {
 
@@ -22,6 +23,10 @@ const ProfilePage: NextPage = () => {
             {selectedTab === "create-project" &&
                 <div className="col-span-2 mt-36 bg-base-100 border-2 border-secondary rounded-3xl shadow-xl">
                     <CreateProject />
+                </div>}
+            {selectedTab === "your-projects" &&
+                <div className="col-span-2 mt-36">
+                    <YourProjects />
                 </div>}
         </div>
     )

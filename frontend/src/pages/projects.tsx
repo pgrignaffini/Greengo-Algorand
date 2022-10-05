@@ -13,8 +13,6 @@ function ProjectsPage() {
 
     return (
         <div className='min-h-screen'>
-
-
             <div className='flex flex-col space-y-12 w-5/6 mx-auto'>
                 {/* Title */}
                 <p className='text-5xl font-semibold font-poppins pt-48'>Explore projects</p>

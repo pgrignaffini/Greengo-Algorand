@@ -4,9 +4,9 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        'pacifico': ['pacifico', 'cursive'],
-        'montserrat': ['montserrat', 'cursive'],
-        'poppins': ['poppins', 'sans-serif'],
+        'pacifico': ['Pacifico', 'cursive'],
+        'montserrat': ['Montserrat', 'cursive'],
+        'poppins': ['Poppins', 'sans-serif'],
       },
     }
   },

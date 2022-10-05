@@ -93,7 +93,7 @@ function CreateProject() {
         }
 
         if (logoToIpfs) {
-            const added = await ipfsClient.add(bannerToIpfs)
+            const added = await ipfsClient.add(logoToIpfs)
             console.log(added)
             logoUrl = `https://greengo.infura-ipfs.io/ipfs/${added.path}`
         }

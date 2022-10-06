@@ -5,6 +5,7 @@ import ProfileSidebar from "../components/profile/ProfileSideBar";
 import { useState } from "react";
 import CreateProject from "../components/profile/CreateProject";
 import YourProjects from "../components/profile/YourProjects";
+import LikedProjects from "../components/profile/LikedProjects";
 
 const ProfilePage: NextPage = () => {
 
@@ -27,6 +28,10 @@ const ProfilePage: NextPage = () => {
             {selectedTab === "your-projects" &&
                 <div className="col-span-2 mt-36">
                     <YourProjects />
+                </div>}
+            {selectedTab === "liked" &&
+                <div className="col-span-2 mt-36">
+                    <LikedProjects />
                 </div>}
         </div>
     )

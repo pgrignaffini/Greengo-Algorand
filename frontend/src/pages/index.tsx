@@ -4,7 +4,6 @@ import FrontHero from "../components/FrontHero";
 import Partners from "../components/Partners";
 import ProjectsCollection from "../components/ProjectsCollection";
 import FAQ from "../components/FAQ";
-import FAQRow from "../components/FAQRow";
 
 const Home: NextPage = () => {
   return (
@@ -15,8 +14,9 @@ const Home: NextPage = () => {
         <link rel="icon" href="/logo.svg" />
       </Head>
 
-      <main className="min-h-screen scrollbar-hide" >
-        <div className="max-w-sm md:max-w-3xl lg:max-w-6xl xl:max-w-7xl mx-auto ">
+      <main className="min-h-screen scrollbar scrollbar-track-gray-400 
+        scrollbar-thumb-green-400" >
+        <div className="max-w-sm md:max-w-3xl lg:max-w-6xl xl:max-w-7xl mx-auto">
           <section>
             <FrontHero />
           </section>

@@ -57,6 +57,19 @@ export const projectRouter = createRouter()
             })
         }
     })
+    .query('votes', {
+        input: getSingleProjectSchema,
+        resolve({ ctx, input }) {
+            return ctx.prisma.project.findUnique({
+                where: {
+                    id: input.projectId
+                },
+                include: {
+                    votes: true,
+                }
+            })
+        }
+    })
     .query('user-projects', {
         input: getUserProjectsSchema,
         resolve({ ctx, input }) {

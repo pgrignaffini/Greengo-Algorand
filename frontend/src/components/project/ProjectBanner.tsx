@@ -1,3 +1,4 @@
+import Image from "next/image"
 
 function ProjectBanner({ banner, logo }: { banner?: string, logo: string }) {
     return (

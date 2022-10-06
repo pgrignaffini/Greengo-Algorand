@@ -11,7 +11,7 @@ function FrontHero() {
                     <p className="py-6 font-poppins">
                         <span className="font-pacifico text-xl text-primary">Greengo </span> is a decentralized community-driven crowdfunding platform, with the main purpose of allowing innovators to raise capital for projects that could help achieve ONU Agenda's 2030, that is a global list of goals designed to be a <span className="italic">blueprint to achieve a better and more sustainable future for all</span>.</p>
                     <div className='flex space-x-4'>
-                        <Link href="/collections">
+                        <Link href="/projects">
                             <button className="btn btn-primary shadow-md">Explore</button>
                         </Link>
                     </div>

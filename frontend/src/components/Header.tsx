@@ -5,7 +5,6 @@ import { useAccount, useNetwork } from 'wagmi'
 import { signIn, signOut, useSession } from "next-auth/react";
 import { UserCircleIcon, StarIcon, PhotographIcon } from '@heroicons/react/outline'
 import makeBlockie from "ethereum-blockies-base64"
-import ChangeTheme from "./ChangeTheme";
 
 function Header() {
 
@@ -29,13 +28,10 @@ function Header() {
                     <SearchBar placeholder="Search a project..." />
                 </div>
                 <div className="hidden xl:flex xl:space-x-7">
-                    <Link href={"/collections"}>
-                        <a className="text-primary font-montserrat text-xl">Creators</a>
-                    </Link>
                     <Link href={"/projects"}>
                         <a className="text-primary font-montserrat text-xl">Projects</a>
                     </Link>
-                    <Link href={"/"}>
+                    <Link href={"#FAQ"}>
                         <a className="text-primary font-montserrat text-xl">FAQ</a>
                     </Link>
                 </div>

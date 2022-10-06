@@ -1,5 +1,4 @@
 import { useState, useRef } from 'react'
-import type { MutableRefObject } from 'react'
 import { useForm } from 'react-hook-form';
 import { create } from 'ipfs-http-client';
 import { GlobeAltIcon, PencilIcon, XCircleIcon, MailIcon } from "@heroicons/react/outline"
@@ -156,11 +155,11 @@ function CreateProject() {
                             </button>}
                     </div>
                     <div className='flex space-x-6 absolute -bottom-8 left-12  '>
-                        <div className='rounded-xl w-16 h-16 object-cover ring ring-secondary ring-offset-base-100 ring-offset-4'>
+                        <div className='rounded-xl w-16 h-16 ring ring-secondary ring-offset-base-100 ring-offset-4'>
                             {logo ?
                                 <>
-                                    <XCircleIcon className='absolute -top-2 right-2 w-6 h-6 text-red-500 cursor-pointer' onClick={removeLogo} />
-                                    <img className='rounded-xl' src={logo} alt="logo" />
+                                    <XCircleIcon className='absolute -top-2 -right-2 w-6 h-6 text-red-500 cursor-pointer' onClick={removeLogo} />
+                                    <img className='w-16 h-16 rounded-xl object-contain ' src={logo} alt="logo" />
                                 </> :
                                 <button className='w-full h-full rounded-xl hover:bg-gray-300'
                                     onClick={() => (imagePickerRef as any).current?.click()}
@@ -169,8 +168,11 @@ function CreateProject() {
                                     <input ref={imagePickerRef} onChange={addImageToLogo} type="file" hidden />
                                 </button>}
                         </div>
-                        <p className='font-poppins text-xl font-semibold uppercase text-center text-wrap mt-16'>{name}</p>
                     </div>
+                </div>
+                <div className='w-3/4 ml-32'>
+                    <div className='font-poppins text-xl font-semibold uppercase 
+                    text-left whitespace-normal'>{name}</div>
                 </div>
             </div>
             <h1 className='font-bold font-poppins text-2xl text-center mt-10'>Fill project details:</h1>

@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { useRouter } from 'next/router'
 import ProjectBanner from '../../components/project/ProjectBanner'
 import { trpc } from '../../utils/trpc'
-import ProjectDetails from '../../components/project/ProjectDetails'
 import Comments from '../../components/Comments'
 import ProjectCarousel from '../../components/project/ProjectCarousel'
 import ProjectInfo from '../../components/project/ProjectInfo'
@@ -63,7 +62,10 @@ const ProjectPage: NextPage = () => {
             <section className='flex flex-col'>
                 <ProjectBanner logo={project?.image as string} banner={project?.banner as string} />
                 <div className='bg-white w-4/5 -mt-32 p-9 lg:p-12 shadow-lg mx-auto rounded-lg'>
-                    <ProjectDetails project={project} />
+                    <div className="flex flex-col items-center gap-4 justify-center">
+                        <h1 className="font-poppins text-3xl mt-4 font-bold">{project?.name}</h1>
+                        <p className="text-justify lg:text-center font-md font-poppins">{project?.description}</p>
+                    </div>
                     {session &&
                         <div className='flex justify-end'>
                             <div className="flex space-x-1 items-center p-2 cursor-pointer hover:text-primary"
@@ -81,7 +83,7 @@ const ProjectPage: NextPage = () => {
                     <Comments projectId={projectId} />
                 </div>
                 <div className='col-span-1 flex flex-col'>
-                    <ProjectInfo />
+                    <ProjectInfo project={project} />
                 </div>
             </section>
         </main>

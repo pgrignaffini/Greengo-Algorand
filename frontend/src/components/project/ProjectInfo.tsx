@@ -1,22 +1,77 @@
-import ProjectInfoRow from "./ProjectInfoRow"
+import type { Project, User, Comment } from "@prisma/client"
+import Discord from "../logos/Discord";
+import Twitter from "../logos/Twitter";
+import { GlobeAltIcon, MailIcon } from "@heroicons/react/outline"
 
-function ProjectInfo() {
+function ProjectInfo({ project }: {
+    project: (Project & {
+        creator: User;
+        comments: Comment[];
+    }) | null | undefined
+}) {
+
+    const startDate = new Date(project?.start as string)
+    const endDate = new Date(project?.end as string)
+
     return (
         <div className='bg-white shadow-lg mx-auto rounded-lg p-5 w-full'>
-            <p className="font-poppins font-bold text-2xl">Project Info</p>
+            <div className="flex justify-between">
+                <p className="font-poppins font-bold text-2xl">Project Info</p>
+                {startDate < new Date() && endDate > new Date() ? <p className="font-poppins font-bold text-2xl text-success">Ongoing</p> : <p className="font-poppins font-bold text-2xl text-error">Ended</p>}
+            </div>
             <div className="flex flex-col space-y-4 mt-8">
-                <ProjectInfoRow />
-                <ProjectInfoRow />
-                <ProjectInfoRow />
-                <ProjectInfoRow />
-                <div className="form-control">
-                    <label className="label">
-                        <span className="label-text">Donate to this project:</span>
-                    </label>
-                    <label className="input-group">
-                        <input type="text" placeholder="0.01" className="input input-bordered" />
-                        <span>cUSD</span>
-                    </label>
+                <p className="font-montserrat font-bold">Creator:</p>
+                <div className="flex items-center space-x-4">
+                    <img src={project?.creator?.image as string} className="rounded-full w-16" alt="creator" />
+                    <p>{project?.creator?.name}</p>
+                </div>
+                <div>
+                    <p className="font-montserrat">Started: {startDate.toDateString()}</p>
+                    <p className="font-montserrat">Ends: {endDate.toDateString()}</p>
+                </div>
+                <div>
+                    <p className="font-montserrat text-center">Goal: {project?.goal} cUSD</p>
+                    <progress className="progress progress-primary" value="70" max="100"></progress>
+                </div>
+                <div className="space-y-4 pt-4">
+                    {project?.discord &&
+                        <div className="flex space-x-4 items-center">
+                            <div className='w-6 h-6'>
+                                <Discord />
+                            </div>
+                            <p>{project?.discord}</p>
+                        </div>
+                    }
+                    {project?.twitter &&
+                        <div className="flex space-x-4 items-center">
+                            <div className='w-6 h-6'>
+                                <Twitter />
+                            </div>
+                            <p>{project?.twitter}</p>
+                        </div>
+                    }
+                    {project?.website &&
+                        <div className="flex space-x-4 items-center">
+                            <GlobeAltIcon className="w-6 h-6 text-secondary" />
+                            <p>{project?.website}</p>
+                        </div>}
+                    {project?.email &&
+                        <div className="flex space-x-4 items-center">
+                            <MailIcon className="w-6 h-6 text-secondary" />
+                            <p>{project?.email}</p>
+                        </div>
+                    }
+                </div>
+                <div className="flex justify-center">
+                    <div className="form-control">
+                        <label className="label">
+                            <span className="label-text">Donate to this project:</span>
+                        </label>
+                        <label className="input-group">
+                            <input type="text" placeholder="0.01" className="input input-bordered" />
+                            <span>cUSD</span>
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>

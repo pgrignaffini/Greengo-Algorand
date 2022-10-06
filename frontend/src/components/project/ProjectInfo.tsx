@@ -12,12 +12,16 @@ function ProjectInfo({ project }: {
 
     const startDate = new Date(project?.start as string)
     const endDate = new Date(project?.end as string)
+    const isOver = new Date() > endDate
+    const hasNotStarted = startDate > new Date()
 
     return (
         <div className='bg-white shadow-lg mx-auto rounded-lg p-5 w-full'>
             <div className="flex justify-between">
                 <p className="font-poppins font-bold text-2xl">Project Info</p>
-                {startDate < new Date() && endDate > new Date() ? <p className="font-poppins font-bold text-2xl text-success">Ongoing</p> : <p className="font-poppins font-bold text-2xl text-error">Ended</p>}
+                {isOver && <p className="font-poppins font-bold text-2xl text-error">Ended</p>}
+                {hasNotStarted && <p className="font-poppins font-bold text-2xl text-info">Not started</p>}
+                {!isOver && !hasNotStarted && <p className="font-poppins font-bold text-2xl text-success">Ongoing</p>}
             </div>
             <div className="flex flex-col space-y-4 mt-8">
                 <p className="font-montserrat font-bold">Creator:</p>
@@ -26,8 +30,8 @@ function ProjectInfo({ project }: {
                     <p>{project?.creator?.name}</p>
                 </div>
                 <div>
-                    <p className="font-montserrat">Started: {startDate.toDateString()}</p>
-                    <p className="font-montserrat">Ends: {endDate.toDateString()}</p>
+                    <p className="font-montserrat">{hasNotStarted ? "Starts" : "Started"}: {startDate.toDateString()}</p>
+                    <p className="font-montserrat">{isOver ? "Ended" : "Ends"}: {endDate.toDateString()}</p>
                 </div>
                 <div>
                     <p className="font-montserrat text-center">Goal: {project?.goal} cUSD</p>

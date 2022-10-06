@@ -11,13 +11,29 @@ function CreateProject() {
 
     const [logo, setLogo] = useState("")
     const [banner, setBanner] = useState("")
-    const [name, setName] = useState("")
+    const [projectName, setProjectName] = useState("")
     const [bannerToIpfs, setBannerToIpfs] = useState("")
     const [logoToIpfs, setLogoToIpfs] = useState("")
     const imagePickerRef = useRef(null)
     const bannerPickerRef = useRef(null)
 
-    const createProject = trpc.useMutation("project.create-project")
+    const createProject = trpc.useMutation("project.create-project", {
+        onMutate: () => {
+            toast.loading("Creating new project...", {
+                id: "project-toast",
+            })
+        },
+        onSuccess: () => {
+            toast.success("Project created!", {
+                id: "project-toast",
+            })
+        },
+        onError: () => {
+            toast.error("Whoops! Something went wrong.", {
+                id: "project-toast",
+            })
+        }
+    })
 
     const projectId = process.env.NEXT_PUBLIC_INFURA_IPFS_PROJECT_ID
     const projectSecret = process.env.NEXT_PUBLIC_INFURA_IPFS_PROJECT_SECRET
@@ -78,10 +94,6 @@ function CreateProject() {
 
     const onSubmit = handleSubmit(async (data) => {
 
-        toast.loading("Creating new project...", {
-            id: "project-toast",
-        })
-
         let bannerUrl = ''
         let logoUrl = ''
 
@@ -111,29 +123,19 @@ function CreateProject() {
             goal: data.goal,
         });
 
-        if (createProject.error) {
-            toast.error("Whoops! Something went wrong.", {
-                id: "project-toast",
-            })
-        } else {
-            toast.success("Project created!", {
-                id: "project-toast",
-            })
-        }
-
-        // setValue("name", "")
-        // setValue("email", "")
-        // setValue("description", "")
-        // setValue("website", "")
-        // setValue("twitter", "")
-        // setValue("discord", "")
-        // setValue("start", "")
-        // setValue("end", "")
-        // setValue("goal", "")
-        // setLogo("")
-        // setBanner("")
-        // setLogoToIpfs("")
-        // setBannerToIpfs("")
+        setValue("name", "")
+        setValue("email", "")
+        setValue("description", "")
+        setValue("website", "")
+        setValue("twitter", "")
+        setValue("discord", "")
+        setValue("start", "")
+        setValue("end", "")
+        setValue("goal", "")
+        setLogo("")
+        setBanner("")
+        setLogoToIpfs("")
+        setBannerToIpfs("")
     })
 
 
@@ -172,7 +174,7 @@ function CreateProject() {
                 </div>
                 <div className='w-3/4 ml-32'>
                     <div className='font-poppins text-xl font-semibold uppercase 
-                    text-left whitespace-normal'>{name}</div>
+                    text-left whitespace-normal'>{projectName}</div>
                 </div>
             </div>
             <h1 className='font-bold font-poppins text-2xl text-center mt-10'>Fill project details:</h1>
@@ -180,7 +182,7 @@ function CreateProject() {
                 <div className='flex flex-col space-y-4 mt-10'>
                     <input
                         {...register('name', { required: true })}
-                        className='border-b-2 border-base-200 bg-base-100 p-2 outline-none placeholder:italic' type="text" placeholder="Project Name*" onChange={(e) => setName(e.target.value)} />
+                        className='border-b-2 border-base-200 bg-base-100 p-2 outline-none placeholder:italic' type="text" placeholder="Project Name*" onChange={(e) => setProjectName(e.target.value)} />
                     <textarea
                         {...register('description', { required: true })}
                         className='border-b-2 border-base-200 bg-base-100 p-2 outline-none placeholder:italic' placeholder="Project Description*" />
@@ -261,10 +263,9 @@ function CreateProject() {
                         )}
                     </div>
                 )}
-                {!!watch('name') && !!watch('description') && !!watch('start') && !!watch('end') && !!watch('goal') &&
-                    <button className='flex mx-auto btn btn-primary mt-8' type="submit">
-                        Create project
-                    </button>}
+                <button className='flex mx-auto btn btn-primary mt-8' type="submit">
+                    Create project
+                </button>
             </form >
         </div >
     )

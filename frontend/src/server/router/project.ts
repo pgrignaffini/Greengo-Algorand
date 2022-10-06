@@ -35,7 +35,17 @@ export const projectRouter = createRouter()
                 },
                 include: {
                     creator: true,
-                }
+                },
+            })
+        }
+    })
+    .query('top-projects', {
+        resolve({ ctx }) {
+            return ctx.prisma.project.findMany({
+                take: 9,
+                include: {
+                    creator: true,
+                },
             })
         }
     })

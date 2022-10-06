@@ -2,10 +2,15 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import FrontHero from "../components/FrontHero";
 import Partners from "../components/Partners";
-import ProjectsCollection from "../components/ProjectsCollection";
 import FAQ from "../components/FAQ";
+import ProjectCard from "../components/ProjectCard";
+import SkeletonCard from "../components/SkeletonCard";
+import { trpc } from "../utils/trpc";
 
 const Home: NextPage = () => {
+
+  const { data: projects, isLoading } = trpc.useQuery(['project.top-projects'])
+
   return (
     <>
       <Head>
@@ -32,7 +37,10 @@ const Home: NextPage = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 
                               max-w-lg md:max-w-3xl xl:max-w-7xl mx-auto mt-10 
                               gap-6 xl:gap-8">
-                {/* <ProjectsCollection /> */}
+                {isLoading && <SkeletonCard cards={9} />}
+                {projects?.map((project: any, index: number) => (
+                  <ProjectCard key={index} attributes={project} />
+                ))}
               </div>
             </div>
           </section>

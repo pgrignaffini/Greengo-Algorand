@@ -17,7 +17,7 @@ const ProfilePage: NextPage = () => {
                 <ProfileSidebar setSelectedTab={setSelectedTab} />
             </div>
             {selectedTab === "profile" &&
-                <div className="col-span-2 mt-36 bg-secondary rounded-3xl shadow-xl">
+                <div className="col-span-2 mt-36 bg-secondary h-fit rounded-3xl shadow-xl">
                     <ProfileHeader />
                     <ProfileBody />
                 </div>}

@@ -66,7 +66,7 @@ function ProjectInfo({ project }: {
                         </div>
                     }
                 </div>
-                <div className="flex justify-center">
+                <div className="flex justify-center items-end space-x-4">
                     <div className="form-control">
                         <label className="label">
                             <span className="label-text">Donate to this project:</span>
@@ -76,6 +76,7 @@ function ProjectInfo({ project }: {
                             <span>cUSD</span>
                         </label>
                     </div>
+                    <button className="btn btn-primary w-fit" disabled={isOver || hasNotStarted}>Donate</button>
                 </div>
             </div>
         </div>

@@ -9,10 +9,10 @@ function ProjectBanner({ banner, logo }: { banner?: string, logo: string }) {
     return (
         <>
             {bannerLoading && <div className='flex justify-center items-center w-full h-96'><Waveform /></div>}
-            <img src={banner} className="w-full inset-x-0 h-96 object-cover" onLoad={() => { setBannerLoading(false) }} />
+            <img src={banner ?? "/blank.png"} className={`w-full inset-x-0 h-96 object-cover ${bannerLoading && "hidden"}`} onLoad={() => { setBannerLoading(false) }} />
             <div className="avatar flex -top-24 items-center justify-center">
                 <div className="w-48 z-10 rounded-lg ring ring-primary ring-offset-base-100 ring-offset-4">
-                    {logoLoading && <div className='flex justify-center items-center'><Waveform /></div>}
+                    {logoLoading && <div className='h-full flex justify-center items-center'><Waveform /></div>}
                     <img src={logo ?? "/blank.png"} onLoad={() => setLogoLoading(false)} />
                 </div>
             </div>

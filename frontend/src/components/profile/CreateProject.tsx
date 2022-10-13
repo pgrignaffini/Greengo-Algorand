@@ -6,9 +6,11 @@ import Discord from "../logos/Discord"
 import Twitter from "../logos/Twitter"
 import toast from "react-hot-toast"
 import { trpc } from "../../utils/trpc";
+import { useRouter } from "next/router"
 
 function CreateProject() {
 
+    const router = useRouter()
     const [logo, setLogo] = useState("")
     const [banner, setBanner] = useState("")
     const [projectName, setProjectName] = useState("")
@@ -23,10 +25,11 @@ function CreateProject() {
                 id: "project-toast",
             })
         },
-        onSuccess: () => {
+        onSuccess: (data) => {
             toast.success("Project created!", {
                 id: "project-toast",
             })
+            router.push(`/project/${data.id}`)
         },
         onError: () => {
             toast.error("Whoops! Something went wrong.", {

@@ -14,7 +14,7 @@ export const createProjectSchema = z.object({
     goal: z.string().min(1),
 })
 
-export const getSingleProjectSchema = z.object({
+export const singleProjectSchema = z.object({
     projectId: z.string().min(1),
 })
 

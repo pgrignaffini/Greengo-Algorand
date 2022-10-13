@@ -7,7 +7,7 @@ function ProjectBanner({ banner, logo }: { banner?: string, logo: string }) {
     const [logoLoading, setLogoLoading] = useState(true)
 
     return (
-        <>
+        <div className='mt-24'>
             {bannerLoading && <div className='flex justify-center items-center w-full h-96'><Waveform /></div>}
             <img src={banner ?? "/blank.png"} className={`w-full inset-x-0 h-96 object-cover ${bannerLoading && "hidden"}`} onLoad={() => { setBannerLoading(false) }} />
             <div className="avatar flex -top-24 items-center justify-center">
@@ -16,7 +16,7 @@ function ProjectBanner({ banner, logo }: { banner?: string, logo: string }) {
                     <img src={logo ?? "/blank.png"} onLoad={() => setLogoLoading(false)} />
                 </div>
             </div>
-        </>
+        </div>
     )
 }
 

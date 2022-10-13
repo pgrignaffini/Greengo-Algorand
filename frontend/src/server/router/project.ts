@@ -1,5 +1,5 @@
 import { createRouter } from "./context";
-import { createProjectSchema, getSingleProjectSchema, getUserProjectsSchema } from "../schema/project.schema";
+import { createProjectSchema, singleProjectSchema, getUserProjectsSchema } from "../schema/project.schema";
 import * as trpc from "@trpc/server"
 
 export const projectRouter = createRouter()
@@ -50,7 +50,7 @@ export const projectRouter = createRouter()
         }
     })
     .query('single-project', {
-        input: getSingleProjectSchema,
+        input: singleProjectSchema,
         resolve({ ctx, input }) {
             return ctx.prisma.project.findUnique({
                 where: {
@@ -68,7 +68,7 @@ export const projectRouter = createRouter()
         }
     })
     .query('votes', {
-        input: getSingleProjectSchema,
+        input: singleProjectSchema,
         resolve({ ctx, input }) {
             return ctx.prisma.project.findUnique({
                 where: {
@@ -105,5 +105,22 @@ export const projectRouter = createRouter()
                     createdAt: 'desc',
                 },
             })
+        }
+    })
+    .mutation('delete-project', {
+        input: singleProjectSchema,
+        async resolve({ ctx, input }) {
+            if (!ctx.session?.user) {
+                new trpc.TRPCError({
+                    code: "FORBIDDEN",
+                    message: "You must be logged in to delete a project",
+                })
+            }
+            const project = await ctx.prisma.project.delete({
+                where: {
+                    id: input.projectId
+                }
+            })
+            return project
         }
     })

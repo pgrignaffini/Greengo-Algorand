@@ -10,7 +10,6 @@ function ProjectsPage() {
 
     const { data: projects, isLoading } = trpc.useQuery(['project.all-projects'])
 
-
     return (
         <div className='min-h-screen'>
             <div className='flex flex-col space-y-12 w-5/6 mx-auto'>

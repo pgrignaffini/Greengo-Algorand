@@ -8,12 +8,12 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 /// @title Greengo Crowdfundign Campaign
 contract GreengoCampaign is Ownable{ 
   IERC20 private CUSD = ERC20(0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1);
-  //IERC20 private GNG = ERC20(0xb2c7d24443043bdb8CA55DBbA545363C477Da248);
+  IERC20 private GNG = ERC20(0x7c5f44B8Dde8B6692B37e8e70367C1FbAf6e7B6A);
   string private campaignName; 
-  uint256 private campaignId;
   uint256 private goalAmount;  
   uint256 private amountCollected = 0; 
   uint256 private endDate;
+
 
  struct Donation {  
    address donor;
@@ -30,18 +30,16 @@ contract GreengoCampaign is Ownable{
 
   constructor(
     string memory _campaignName, // change to byte32
-    uint256 _campaignId,
     uint256 _goalAmount,
     uint256 _duration //in days
     ) {
         campaignName = _campaignName;
-        campaignId = _campaignId;
         goalAmount = _goalAmount;
         endDate = block.timestamp + (_duration*86400);
     }
 
     function claimFunds() public onlyOwner {
-        require(block.timestamp < endDate, "The funding phase is still in progress.");
+        //require(block.timestamp < endDate, "The funding phase is still in progress.");
         require(
 		  CUSD.transfer(
 			owner(),
@@ -53,7 +51,7 @@ contract GreengoCampaign is Ownable{
     amountCollected = 0;
     }
 
-    function donate(uint _amount) public{
+    function donate(uint _amount) public payable{
         uint256 allowance = CUSD.allowance(msg.sender, address(this));
         require(allowance >= _amount, "Allowance is not enough.");
         require(block.timestamp < endDate, "The funding phase of this project is ended.");
@@ -68,11 +66,8 @@ contract GreengoCampaign is Ownable{
         donations[donationsCounter] = Donation(msg.sender, block.timestamp, _amount);
         donationsCounter++;
         amountCollected += _amount;
+        GNG.transfer(msg.sender, _amount);
         emit DonationOccurred(msg.sender, 3 , _amount);
-    }
-
-    function getCampaignId() public view returns(uint256){
-      return campaignId;
     }
 
     function getGoalAmount() public view returns(uint256){

@@ -67,7 +67,7 @@ function YourProjects() {
                 {projects?.map((project) => (
                     <div key={project.id} >
                         <label htmlFor="delete-modal" className="cursor-pointer" onClick={() => setProjectIdToDelete(project.id)}>
-                            <XCircleIcon className="h-10 w-10 z-10 relative right-4 top-5 text-error cursor-pointer" />
+                            <XCircleIcon className="h-10 w-10 z-10 relative right-4 top-5 text-error cursor-pointer hover:scale-125 transition-all duration-500 ease-in-out" />
                         </label>
                         <ProjectCard attributes={project} />
                     </div>

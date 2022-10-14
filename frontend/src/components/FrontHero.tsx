@@ -5,7 +5,7 @@ function FrontHero() {
     return (
         <div className="hero">
             <div className="hero-content flex-col lg:flex-row-reverse mx-auto mt-32">
-                <Logo />
+                <img src="/hero.png" alt="hero" className="w-1/3" />
                 <div className='mr-10'>
                     <h1 className="text-5xl font-bold font-poppins">Donate & Get Rewarded!</h1>
                     <p className="py-6 font-poppins">

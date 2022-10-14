@@ -18,6 +18,8 @@ const ProjectPage: NextPage = () => {
     const userId = session?.user?.id
     const ctx = trpc.useContext();
     const [disabled, setDisabled] = useState(false)
+    const [clicked, setClicked] = useState(false)
+
 
     const { data: project } = trpc.useQuery(['project.single-project', {
         projectId: projectId
@@ -72,9 +74,10 @@ const ProjectPage: NextPage = () => {
                             <button className="flex space-x-1 items-center p-2 cursor-pointer hover:text-primary"
                                 disabled={disabled} onClick={() => {
                                     setDisabled(true)
+                                    setClicked(true)
                                     upVote()
                                 }}>
-                                {vote ? <HeartIconFilled className="h-8 text-primary" /> : <HeartIcon className="h-8" />}
+                                {(vote || clicked) ? <HeartIconFilled className="h-8 text-primary" /> : <HeartIcon className="h-8" />}
                                 <p className='font-poppins text-md'>{votes ?? "0"}</p>
                             </button>
                         </div>

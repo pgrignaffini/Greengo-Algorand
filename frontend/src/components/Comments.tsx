@@ -81,7 +81,7 @@ function Comments({ projectId }: { projectId: string }) {
                     <button type="submit" disabled={!comment.trim()} className="font-semibold text-primary hover:text-primary-focus cursor-pointer">Comment</button>
                 </form>
                 :
-                <h1 className="font-poppins text-2xl font-semibold">You need to sign in to post a comment!</h1>
+                <h1 className="p-3 font-poppins text-md">You need to sign in to post a comment!</h1>
             }
         </div>
     )

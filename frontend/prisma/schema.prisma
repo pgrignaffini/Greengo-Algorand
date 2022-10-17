@@ -64,11 +64,11 @@ model VerificationToken {
 
 model Project {
     id          String    @id @default(cuid())
-    name        String?
+    name        String
     email       String?
     image       String?
     banner      String?
-    description String
+    description String?
     creatorId   String
     start       String
     end         String

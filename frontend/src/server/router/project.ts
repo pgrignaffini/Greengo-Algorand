@@ -1,5 +1,5 @@
 import { createRouter } from "./context";
-import { createProjectSchema, singleProjectSchema, getUserProjectsSchema } from "../schema/project.schema";
+import { createProjectSchema, singleProjectSchema, getUserProjectsSchema, searchProjectSchema } from "../schema/project.schema";
 import * as trpc from "@trpc/server"
 
 export const projectRouter = createRouter()
@@ -64,6 +64,19 @@ export const projectRouter = createRouter()
                         },
                     }
                 }
+            })
+        }
+    })
+    .query('search-project', {
+        input: searchProjectSchema,
+        resolve({ ctx, input }) {
+            return ctx.prisma.project.findMany({
+                where: {
+                    name: {
+                        startsWith: input.name,
+                        mode: 'insensitive',
+                    }
+                },
             })
         }
     })

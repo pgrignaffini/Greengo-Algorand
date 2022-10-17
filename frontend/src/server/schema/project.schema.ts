@@ -18,6 +18,10 @@ export const singleProjectSchema = z.object({
     projectId: z.string().min(1),
 })
 
+export const searchProjectSchema = z.object({
+    name: z.string().min(1),
+})
+
 export const getUserProjectsSchema = z.object({
     creatorId: z.string().min(1),
 })

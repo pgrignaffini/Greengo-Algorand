@@ -8,7 +8,9 @@ export default function SearchBar({ placeholder }: { placeholder: string }) {
 
     const { data: projects } = trpc.useQuery(['project.search-project', {
         name: wordEntered
-    }])
+    }], {
+        enabled: wordEntered.length > 0
+    })
 
     return (
         <div className="rounded-md outline-none">

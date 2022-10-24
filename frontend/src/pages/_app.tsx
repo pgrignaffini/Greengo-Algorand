@@ -13,84 +13,15 @@ import dynamic from 'next/dynamic'
 import "../styles/globals.css";
 import { Toaster } from 'react-hot-toast';
 import { ReactQueryDevtools } from 'react-query/devtools'
-
+import { AppWrapper } from '../context/AppContext';
+import Footer from "../components/Footer";
+import { SkeletonTheme } from "react-loading-skeleton";
 
 const Header = dynamic(
   () => import('../components/Header'),
   { ssr: false }
 )
 
-//wagmi.
-import { WagmiConfig, createClient, configureChains, Chain } from 'wagmi'
-import { publicProvider } from 'wagmi/providers/public';
-import { infuraProvider } from 'wagmi/providers/infura'
-import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
-
-//rainbow kit UI framework.
-import '@rainbow-me/rainbowkit/styles.css';
-import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
-import Footer from "../components/Footer";
-import { SkeletonTheme } from "react-loading-skeleton";
-
-const Celo: Chain = {
-  id: 0xa4ec,
-  name: 'Celo',
-  network: 'Celo',
-  nativeCurrency: {
-    decimals: 18,
-    name: 'Celo',
-    symbol: 'CELO',
-  },
-  rpcUrls: {
-    default: 'https://forno.celo.org',
-  },
-  blockExplorers: {
-    default: { name: 'CeloExplorer', url: 'https://explorer.celo.org/' },
-  },
-  testnet: false,
-}
-
-const Alfajores: Chain = {
-  id: 0xaef3,
-  name: 'Alfajores Testnet',
-  network: 'Alfajores Testnet',
-  nativeCurrency: {
-    decimals: 18,
-    name: 'Alfajores Celo',
-    symbol: 'A-CELO',
-  },
-  rpcUrls: {
-    default: 'https://alfajores-forno.celo-testnet.org',
-  },
-  blockExplorers: {
-    default: { name: 'AlfajoresCeloExplorer', url: 'https://alfajores-blockscout.celo-testnet.org/' },
-  },
-  testnet: true,
-}
-
-const { chains, provider, webSocketProvider } = configureChains([Celo, Alfajores],
-  [jsonRpcProvider({
-    rpc: (chain) => {
-      if (chain.id !== Celo.id || Alfajores.id) return null
-      return { http: chain.rpcUrls.default }
-    },
-  }),
-  publicProvider()
-  ]
-)
-
-const { connectors } = getDefaultWallets({
-  appName: 'Greengo',
-  chains
-});
-
-
-const wagmiClient = createClient({
-  autoConnect: true,
-  connectors,
-  provider,
-  webSocketProvider,
-})
 
 const MyApp: AppType = ({
   Component,
@@ -103,19 +34,17 @@ const MyApp: AppType = ({
 
   return (
     <SessionProvider session={session}>
-      <WagmiConfig client={wagmiClient}>
-        <RainbowKitProvider chains={chains}>
-          <SkeletonTheme baseColor="#a7ffa4" highlightColor="#d3ffd8" >
-            <Toaster />
-            <div className="bg-base-100">
-              <Header />
-              <Component {...pageProps} />
-              <Footer />
-            </div>
-            <ReactQueryDevtools initialIsOpen={false} />
-          </SkeletonTheme>
-        </RainbowKitProvider>
-      </WagmiConfig>
+      <AppWrapper>
+        <SkeletonTheme baseColor="#a7ffa4" highlightColor="#d3ffd8" >
+          <Toaster />
+          <div className="bg-base-100">
+            <Header />
+            <Component {...pageProps} />
+            <Footer />
+          </div>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </SkeletonTheme>
+      </AppWrapper>
     </SessionProvider>
   );
 };

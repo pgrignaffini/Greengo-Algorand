@@ -1,24 +1,31 @@
 import Link from "next/link"
 import SearchBar from "./SearchBar"
-import { useConnectModal, useAccountModal, useChainModal } from '@rainbow-me/rainbowkit'
-import { useAccount, useNetwork } from 'wagmi'
 import { signIn, signOut, useSession } from "next-auth/react";
 import makeBlockie from "ethereum-blockies-base64"
+import useAccount from "./hooks/useAccount";
+import ConnectAlgoSigner from "./ConnectAlgoSigner";
 
 function Header() {
 
-    const { openConnectModal } = useConnectModal();
-    const { openAccountModal } = useAccountModal();
-    const { openChainModal } = useChainModal();
-    const { isConnected, address } = useAccount();
-    const { chain } = useNetwork()
+    const { account, isConnected } = useAccount()
     const { data: session } = useSession();
 
-    console.log("Connected to: ", chain)
-    console.log(session)
+    const accountModal = (
+        <>
+            <input type="checkbox" id="account-modal" className="modal-toggle" />
+            <div className="modal">
+                <div className="modal-box max-w-3xl">
+                    <label htmlFor="account-modal" className="text-primary absolute right-4 top-4 cursor-pointer">✕</label>
+                    <h3 className="text-lg font-bold">Connected account: </h3>
+                    <p className="py-4">{account}</p>
+                </div>
+            </div>
+        </>
+    )
 
     return (
         <header className="fixed top-0 right-0 bg-base-100 left-0 z-50">
+            {accountModal}
             <div className="p-7 max-w-7xl mx-auto">
                 <div className="flex justify-between items-center">
                     <Link href={"/"}>
@@ -38,15 +45,7 @@ function Header() {
                     {/* <div>
                     <ChangeTheme />
                 </div> */}
-                    {isConnected ?
-                        (<>
-                            <button className="btn btn-sm btn-outline btn-primary normal-case" onClick={openChainModal}><p>Chain</p></button>
-                        </>)
-                        :
-                        (<button className="p-2 rounded-md bg-gradient-to-tr from-primary to-secondary shadow-md" onClick={openConnectModal}>
-                            <p className="lg:inline font-poppins text-inherit">Connect wallet</p>
-                        </button>)
-                    }
+                    {!isConnected && <ConnectAlgoSigner />}
                     {session &&
                         (<div className="flex space-x-2 items-center">
                             <Link href="/profile">
@@ -55,14 +54,16 @@ function Header() {
                             <button className="btn btn-sm btn-outline btn-primary normal-case" onClick={() => signOut()}>
                                 <p>Sign Out</p>
                             </button>
-                            <img src={session?.user?.image as string} className="peer rounded-full w-8 h-8 cursor-pointer" onClick={openAccountModal} />
+                            <img src={session?.user?.image as string} className="peer rounded-full w-8 h-8 cursor-pointer" />
                         </div>)}
-                    {isConnected && !session &&
+                    {account && !session &&
                         (<div className="flex space-x-2 items-center">
                             <button className="btn btn-sm btn-outline btn-primary ml-3 normal-case" onClick={() => signIn("discord")}>
                                 Sign In
                             </button>
-                            <img src={makeBlockie(address as string)} className="peer rounded-full w-8 h-8 cursor-pointer" onClick={openAccountModal} />
+                            <label htmlFor="account-modal">
+                                <img src={makeBlockie(account)} className="peer rounded-full w-8 h-8 cursor-pointer" />
+                            </label>
                         </div>)
                     }
                 </div>

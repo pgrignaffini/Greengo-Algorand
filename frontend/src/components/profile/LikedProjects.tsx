@@ -15,7 +15,7 @@ function LikedProjects() {
                 {isLoading && <SkeletonCard cards={8} />}
                 {data?.map((item) => (
                     <div key={item?.project?.id} >
-                        <ProjectCard attributes={item?.project} />
+                        <ProjectCard project={item?.project} />
                     </div>
                 ))}
             </div>

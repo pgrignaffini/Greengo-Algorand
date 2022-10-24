@@ -6,6 +6,7 @@ import FAQ from "../components/FAQ";
 import ProjectCard from "../components/ProjectCard";
 import SkeletonCard from "../components/SkeletonCard";
 import { trpc } from "../utils/trpc";
+import { Project, User } from "@prisma/client";
 
 const Home: NextPage = () => {
 
@@ -38,8 +39,8 @@ const Home: NextPage = () => {
                               max-w-lg md:max-w-3xl xl:max-w-7xl mx-auto mt-10 
                               gap-6 xl:gap-8">
                 {isLoading && <SkeletonCard cards={9} />}
-                {projects?.map((project: any, index: number) => (
-                  <ProjectCard key={index} attributes={project} />
+                {projects?.map((project: Project, index: number) => (
+                  <ProjectCard key={index} project={project} />
                 ))}
               </div>
             </div>

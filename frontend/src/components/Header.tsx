@@ -4,20 +4,27 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import makeBlockie from "ethereum-blockies-base64"
 import useAccount from "./hooks/useAccount";
 import ConnectAlgoSigner from "./ConnectAlgoSigner";
+import { useRouter } from "next/router";
 
 function Header() {
 
     const { account, isConnected } = useAccount()
     const { data: session } = useSession();
+    const router = useRouter();
 
     const accountModal = (
         <>
             <input type="checkbox" id="account-modal" className="modal-toggle" />
             <div className="modal">
                 <div className="modal-box max-w-3xl">
-                    <label htmlFor="account-modal" className="text-primary absolute right-4 top-4 cursor-pointer">✕</label>
+                    <label htmlFor="account-modal" className="text-primary text-xl absolute right-4 top-4 cursor-pointer">✕</label>
                     <h3 className="text-lg font-bold">Connected account: </h3>
-                    <p className="py-4">{account}</p>
+                    <p className="py-4 cursor-pointer hover:underline hover:text-info">
+                        <a
+                            href={`https://goalseeker.purestake.io/algorand/testnet/account/${account}`}
+                            target="_blank"
+                            rel="noreferrer noopener">{account}</a>
+                    </p>
                 </div>
             </div>
         </>
@@ -51,10 +58,15 @@ function Header() {
                             <Link href="/profile">
                                 <a className="btn btn-sm btn-outline btn-primary normal-case">Profile</a>
                             </Link>
-                            <button className="btn btn-sm btn-outline btn-primary normal-case" onClick={() => signOut()}>
+                            <button className="btn btn-sm btn-outline btn-primary normal-case" onClick={() => {
+                                signOut()
+                                router.push("/")
+                            }}>
                                 <p>Sign Out</p>
                             </button>
-                            <img src={session?.user?.image as string} className="peer rounded-full w-8 h-8 cursor-pointer" />
+                            <label htmlFor="account-modal">
+                                <img src={session?.user?.image as string} className="peer rounded-full w-8 h-8 cursor-pointer" />
+                            </label>
                         </div>)}
                     {account && !session &&
                         (<div className="flex space-x-2 items-center">

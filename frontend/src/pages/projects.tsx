@@ -37,11 +37,25 @@ function ProjectsPage() {
                         setWordEntered(e.target.value);
                     }}
                 />
+                <div className='flex items-center space-x-10'>
+                    <div className='flex items-center space-x-4'>
+                        <div className='w-8 h-8 rounded-md ring-2 ring-red-500' />
+                        <p className='font-montserrat'>Crowdfunding over</p>
+                    </div>
+                    <div className='flex items-center space-x-4'>
+                        <div className='w-8 h-8 rounded-md ring-2 ring-green-500' />
+                        <p className='font-montserrat'>Crowdfunding ongoing</p>
+                    </div>
+                    <div className='flex items-center space-x-4'>
+                        <div className='w-8 h-8 rounded-md ring-2 ring-blue-400' />
+                        <p className='font-montserrat'>Crowdfunding not started</p>
+                    </div>
+                </div>
                 <div className='grid grid-cols-2 lg:grid-cols-4 gap-6 pb-10'>
                     {isLoading && <SkeletonCard cards={8} />}
                     {handleFilter()?.map((project) => (
                         <div key={project.id} >
-                            <ProjectCard attributes={project} />
+                            <ProjectCard project={project} />
                         </div>
                     ))}
                 </div>

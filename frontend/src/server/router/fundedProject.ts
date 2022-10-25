@@ -1,5 +1,5 @@
 import { createRouter } from "./context";
-import { createFundedProjectSchema } from "../schema/fundedProject.schema";
+import { createFundedProjectSchema, singleFundedProjectSchema } from "../schema/fundedProject.schema";
 import * as trpc from "@trpc/server"
 
 export const fundedProjectRouter = createRouter()
@@ -19,4 +19,14 @@ export const fundedProjectRouter = createRouter()
 
             return fundedProject
         }
-    }) 
+    })
+    .query('funded-project-amount', {
+        input: singleFundedProjectSchema,
+        resolve({ ctx, input }) {
+            return ctx.prisma.fundedProject.groupBy({
+                by: ['projectId'],
+                where: { projectId: input.projectId },
+                _sum: { amount: true }
+            })
+        }
+    })

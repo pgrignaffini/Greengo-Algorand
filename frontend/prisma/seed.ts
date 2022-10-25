@@ -47,7 +47,7 @@ async function main() {
         create: {
             id: 'cl8x6p2rr0007s5f0k3bhka77',
             appId: '0',
-            name: 'Beyond skin ',
+            name: 'Beyond skin',
             email: '',
             image: 'https://greengo.infura-ipfs.io/ipfs/QmZEpTGNv7H13XVx5iuJA8kywbgm72NuiX55h6uSqbpYxR',
             banner: 'https://greengo.infura-ipfs.io/ipfs/QmbN7guKBUvFP7Zp1pEeh6UbLwp5gD3JVoyHb8Me6UeNNX',

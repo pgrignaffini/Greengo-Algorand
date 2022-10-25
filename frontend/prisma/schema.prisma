@@ -63,25 +63,34 @@ model VerificationToken {
 }
 
 model Project {
-    id          String    @id @default(cuid())
-    name        String
-    appId       String
-    email       String?
-    image       String?
-    banner      String?
-    description String?
-    creatorId   String
-    start       String
-    end         String
-    goal        String
-    discord     String?
-    twitter     String?
-    website     String?
-    creator     User      @relation(fields: [creatorId], references: [id], onDelete: Cascade)
-    comments    Comment[]
-    createdAt   DateTime  @default(now())
-    updatedAt   DateTime  @default(now()) @updatedAt
-    votes       Vote[]
+    id             String          @id @default(cuid())
+    name           String
+    appId          String
+    email          String?
+    image          String?
+    banner         String?
+    description    String?
+    creatorId      String
+    start          String
+    end            String
+    goal           String
+    discord        String?
+    twitter        String?
+    website        String?
+    creator        User            @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+    comments       Comment[]
+    createdAt      DateTime        @default(now())
+    updatedAt      DateTime        @default(now()) @updatedAt
+    votes          Vote[]
+    fundedProjects FundedProject[]
+}
+
+model FundedProject {
+    id        String  @id @default(cuid())
+    projectId String
+    project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+    amount    String
+    account   String
 }
 
 model Comment {

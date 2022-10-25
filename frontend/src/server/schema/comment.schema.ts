@@ -1,7 +1,7 @@
 import z from 'zod';
 
 export const createCommentSchema = z.object({
-    text: z.string().min(5),
+    text: z.string().min(2),
     projectId: z.string().min(1),
 })
 

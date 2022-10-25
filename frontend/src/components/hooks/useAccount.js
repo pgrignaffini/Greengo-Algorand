@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 
 function useAccount() {
 
-    const [account, setAccount] = useState(null);
+    const [account, setAccount] = useState(undefined);
     const [isConnected, setIsConnected] = useState(false);
 
     useEffect(() => {

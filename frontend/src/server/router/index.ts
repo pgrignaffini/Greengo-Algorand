@@ -5,6 +5,7 @@ import { protectedExampleRouter } from "./protected-example-router";
 import { projectRouter } from "./project";
 import { commentRouter } from "./comment";
 import { voteRouter } from "./vote";
+import { fundedProjectRouter } from "./fundedProject";
 
 
 export const appRouter = createRouter()
@@ -12,7 +13,8 @@ export const appRouter = createRouter()
   .merge("auth.", protectedExampleRouter)
   .merge("project.", projectRouter)
   .merge("comment.", commentRouter)
-  .merge("vote.", voteRouter);
+  .merge("vote.", voteRouter)
+  .merge("fundedProject.", fundedProjectRouter);
 
 // export type definition of API
 export type AppRouter = typeof appRouter;

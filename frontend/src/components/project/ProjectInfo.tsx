@@ -3,6 +3,13 @@ import Discord from "../logos/Discord";
 import Twitter from "../logos/Twitter";
 import { GlobeAltIcon, MailIcon } from "@heroicons/react/outline"
 import ProfileCard from "../profile/ProfileCard";
+import type { FormEvent } from "react"
+import { optInApp, sendFunds } from "../../utils/ContractOperations";
+import { CONSTANTS } from '../../constants/Constants';
+import { useAppContext } from '../../context/AppContext';
+import useAccount from "../hooks/useAccount";
+import toast from "react-hot-toast"
+import { trpc } from "../../utils/trpc";
 
 function ProjectInfo({ project }: {
     project: (Project & {
@@ -11,10 +18,14 @@ function ProjectInfo({ project }: {
     }) | null | undefined
 }) {
 
+    const { account, isConnected } = useAccount()
+    const { algodClient } = useAppContext()
     const startDate = new Date(project?.start as string)
     const endDate = new Date(project?.end as string)
     const isOver = new Date() > endDate
     const hasNotStarted = startDate > new Date()
+
+    const fundProject = trpc.useMutation("fundedProject.fund-project")
 
     const profileModal = (
         <>
@@ -27,6 +38,60 @@ function ProjectInfo({ project }: {
             </div>
         </>
     )
+
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+        // Stop the form from submitting and refreshing the page.
+        event.preventDefault()
+
+        // Get data from the form.
+        const data = {
+            amount: event.currentTarget.amount.value,
+        }
+
+        if (data.amount <= 0 || data.amount.length === 0) {
+            return
+        }
+
+        let amount = parseFloat(data.amount)
+        amount -= CONSTANTS.PLATFORM_FEE
+        const amountStr = amount.toString()
+
+        toast.loading("Sending funds, please sign the transactions", {
+            id: "funding-toast"
+        })
+
+        const accountInfo = await algodClient.accountInformation(account).do();
+        const isOptedIn = accountInfo["apps-local-state"].filter((app: any) => String(app.id) === project?.appId)
+        if (!isOptedIn.length) {
+            try {
+                await optInApp(algodClient, parseInt(project?.appId as string), account)
+            }
+            catch (e) {
+                toast.error("Failed to opt in to app", {
+                    id: "funding-toast"
+                })
+                return
+            }
+        }
+
+        try {
+            await sendFunds(algodClient, parseInt(project?.appId as string), account, amount)
+            if (account && project?.id) {
+                fundProject.mutate({
+                    account,
+                    projectId: project?.id,
+                    amount: amountStr
+                })
+            }
+            toast.success("Funds sent successfully", {
+                id: "funding-toast"
+            })
+        }
+        catch (e) {
+            toast.error("Failed to send funds")
+            return
+        }
+    }
 
     return (
         <>
@@ -68,13 +133,23 @@ function ProjectInfo({ project }: {
                                 <div className='w-6 h-6'>
                                     <Twitter />
                                 </div>
-                                <p>{project?.twitter}</p>
+                                <p className="cursor-pointer hover:underline hover:text-info">
+                                    <a
+                                        href={`https://twitter.com/${project?.twitter}`}
+                                        target="_blank"
+                                        rel="noreferrer noopener">{project?.twitter}</a>
+                                </p>
                             </div>
                         }
                         {project?.website &&
                             <div className="flex space-x-4 items-center">
                                 <GlobeAltIcon className="w-6 h-6 text-secondary" />
-                                <p>{project?.website}</p>
+                                <p className="cursor-pointer hover:underline hover:text-info">
+                                    <a
+                                        href={`${project?.website}`}
+                                        target="_blank"
+                                        rel="noreferrer noopener">{project?.website}</a>
+                                </p>
                             </div>}
                         {project?.email &&
                             <div className="flex space-x-4 items-center">
@@ -84,16 +159,15 @@ function ProjectInfo({ project }: {
                         }
                     </div>
                     <div className="flex flex-col items-center justify-center space-y-4">
-                        <div className="form-control">
+                        <form onSubmit={(e) => handleSubmit(e)}>
                             <label className="label">
                                 <span className="label-text">Donate to this project:</span>
                             </label>
                             <label className="input-group">
-                                <input type="text" placeholder="0.01" className="input input-bordered" />
+                                <input type="text" id="amount" placeholder="0.01" className="input input-bordered" required />
                                 <span>ALGO</span>
                             </label>
-                        </div>
-                        <button className="btn btn-primary w-full" disabled={isOver || hasNotStarted}>Donate</button>
+                            {isConnected && <button type="submit" className="mt-4 btn btn-primary w-full" disabled={isOver || hasNotStarted}>Donate</button>}                        </form>
                     </div>
                 </div>
             </div>

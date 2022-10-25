@@ -5,6 +5,7 @@ async function main() {
         create: {
             id: 'cl8x65vcy0000s5f0j5hq9jge',
             name: 'Eden Project',
+            appId: '0',
             email: '',
             image: 'https://greengo.infura-ipfs.io/ipfs/QmNVVdeqBfpDx7mSu6XNBv2Cvc4BVHVh5sdLSKjNbgNkX7',
             banner: 'https://greengo.infura-ipfs.io/ipfs/QmNTTupyLfqpKDbUZfJNGXWaCkuhruTB4ZpAAgL3yFwf95',
@@ -25,6 +26,7 @@ async function main() {
         create: {
             id: 'cl8x6guwk0005s5f0qo0p4oq1',
             name: 'Chatham Green Project ',
+            appId: '0',
             email: '',
             image: 'https://greengo.infura-ipfs.io/ipfs/QmQMCuqqJhJ7v45GpuAqKbYhGYP1ay3DyzGc4pwHwghnKJ',
             banner: 'https://greengo.infura-ipfs.io/ipfs/QmUyfMzsrfp92nDGdedz5iZ3uivVL4nLcrMjvn1tFCaFDm',
@@ -44,6 +46,7 @@ async function main() {
     await prisma.project.upsert({
         create: {
             id: 'cl8x6p2rr0007s5f0k3bhka77',
+            appId: '0',
             name: 'Beyond skin ',
             email: '',
             image: 'https://greengo.infura-ipfs.io/ipfs/QmZEpTGNv7H13XVx5iuJA8kywbgm72NuiX55h6uSqbpYxR',
@@ -65,6 +68,7 @@ async function main() {
         create: {
             id: 'cl8x6tgdm0008s5f0lloxsi7f',
             name: 'Style with Heart ',
+            appId: '0',
             email: '',
             image: 'https://greengo.infura-ipfs.io/ipfs/QmR9eDENseo3BRWf5ioMiiv639UwoBXKUdtYnbTDEVF9m1',
             banner: '',
@@ -85,6 +89,7 @@ async function main() {
         create: {
             id: 'cl8x65vcy0000s5f0j5hq9jge',
             name: 'Greenhost',
+            appId: '0',
             email: '',
             image: 'https://greengo.infura-ipfs.io/ipfs/QmWmAWxRK6dELCQVqbLZyc1ciLprnzPP1ZLwNjft4TGKMq',
             banner: 'https://greengo.infura-ipfs.io/ipfs/QmRV53FRYNQJ6f7GVibDmgtvaeejAVhSu1pK5ATBsq1k81',
@@ -105,6 +110,7 @@ async function main() {
         create: {
             id: 'cl8x721wb000cs5f0z5tkfz3z',
             name: 'Claire Potter Design',
+            appId: '0',
             email: '',
             image: 'https://greengo.infura-ipfs.io/ipfs/QmVNrJf3tE9LLesrMHX99j2pwWkgytmrF9yfX3ezQvrQM7',
             banner: 'https://greengo.infura-ipfs.io/ipfs/Qmb6b9MdEsXhjdau9XMfgLAdfiLG9V6E4qdJT5hNyNRXNV',
@@ -125,6 +131,7 @@ async function main() {
         create: {
             id: 'cl8x746li000es5f0isu0a9xy',
             name: 'Dancing Rabbit Ecovillage ',
+            appId: '0',
             email: '',
             image: 'https://greengo.infura-ipfs.io/ipfs/QmfX8o4He3hu1oHSPaidsna7BiMjXyBUA4xGfjR8gdi2RX',
             banner: 'https://greengo.infura-ipfs.io/ipfs/QmPTLpK94S9aZFnPHyUCPFBN8EVGUkAFAEBBaVtkeLQtd8',
@@ -145,6 +152,7 @@ async function main() {
         create: {
             id: 'cl8x775a1000fs5f0drdq4ra5',
             name: 'Green Alliance',
+            appId: '0',
             email: '',
             image: 'https://greengo.infura-ipfs.io/ipfs/QmT41ZFb2RAViHJvgmVut8Ku98mvvNpnT869fgv6YGynxV',
             banner: 'https://greengo.infura-ipfs.io/ipfs/QmTWywaAtKMFwkLZCbywF7FeWmHMiasAR8m7RNquut2W4y',
@@ -165,6 +173,7 @@ async function main() {
         create: {
             id: 'cl8x78mlf000hs5f0klruvh4n',
             name: 'Otesha Project',
+            appId: '0',
             email: '',
             image: 'https://greengo.infura-ipfs.io/ipfs/QmPMPJ4D5F2Rti8F7eP3HeBGstgPBvDP8znsCFujiJUM2i',
             banner: 'https://greengo.infura-ipfs.io/ipfs/QmRYN7DH72tNaMT4AAXWidJBNL8GMyWjTEjyVjX5ZNmCmc',
@@ -186,6 +195,7 @@ async function main() {
             id: 'cl96rairn0000s5mf45xqxi2e',
             name: 'EDF Energy',
             email: '',
+            appId: '0',
             image: 'https://greengo.infura-ipfs.io/ipfs/QmePXpUTNkSUHQhowHvahzRrinWkHAZXbxrHu35xBn7WCg',
             banner: 'https://greengo.infura-ipfs.io/ipfs/QmSTJbyg5EwZ9kkgJyP2rPZ4cb3suJGWX8JzoRHS7eXwRK',
             description: 'We\'re delighted to be recognized by Green Match UK for our schools programme the Pod. Educating young people about energy, science and sustainability is very important to EDF Energy and we\'re really pleased to have reached 19,500 schools across the UK and in 36 countries across the world with our resources and green campaigns.\' - Robyn Thorn, Education Programme Manager.',

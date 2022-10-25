@@ -51,7 +51,7 @@ function ProjectInfo({ project }: {
                         <p className="font-montserrat">{isOver ? "Ended" : "Ends"}: {endDate.toDateString()}</p>
                     </div>
                     <div>
-                        <p className="font-montserrat text-center">Goal: {project?.goal} cUSD</p>
+                        <p className="font-montserrat text-center">Goal: {project?.goal} ALGO</p>
                         <progress className="progress progress-primary" value="70" max="100"></progress>
                     </div>
                     <div className="space-y-4 pt-4">
@@ -83,17 +83,17 @@ function ProjectInfo({ project }: {
                             </div>
                         }
                     </div>
-                    <div className="flex justify-center items-end space-x-4">
+                    <div className="flex flex-col items-center justify-center space-y-4">
                         <div className="form-control">
                             <label className="label">
                                 <span className="label-text">Donate to this project:</span>
                             </label>
                             <label className="input-group">
                                 <input type="text" placeholder="0.01" className="input input-bordered" />
-                                <span>cUSD</span>
+                                <span>ALGO</span>
                             </label>
                         </div>
-                        <button className="btn btn-primary w-fit" disabled={isOver || hasNotStarted}>Donate</button>
+                        <button className="btn btn-primary w-full" disabled={isOver || hasNotStarted}>Donate</button>
                     </div>
                 </div>
             </div>

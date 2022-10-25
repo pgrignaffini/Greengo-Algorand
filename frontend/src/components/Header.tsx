@@ -10,7 +10,6 @@ function Header() {
 
     const { account, isConnected } = useAccount()
     const { data: session } = useSession();
-    const router = useRouter();
 
     const accountModal = (
         <>
@@ -59,8 +58,7 @@ function Header() {
                                 <a className="btn btn-sm btn-outline btn-primary normal-case">Profile</a>
                             </Link>
                             <button className="btn btn-sm btn-outline btn-primary normal-case" onClick={() => {
-                                signOut()
-                                router.push("/")
+                                signOut({ callbackUrl: '/' })
                             }}>
                                 <p>Sign Out</p>
                             </button>
@@ -70,7 +68,7 @@ function Header() {
                         </div>)}
                     {account && !session &&
                         (<div className="flex space-x-2 items-center">
-                            <button className="btn btn-sm btn-outline btn-primary ml-3 normal-case" onClick={() => signIn("discord")}>
+                            <button className="btn btn-sm btn-outline btn-primary ml-3 normal-case" onClick={() => signIn("discord", { callbackUrl: '/profile' })}>
                                 Sign In
                             </button>
                             <label htmlFor="account-modal">

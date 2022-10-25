@@ -7,6 +7,9 @@ import Twitter from "../logos/Twitter"
 import toast from "react-hot-toast"
 import { trpc } from "../../utils/trpc";
 import { useRouter } from "next/router"
+import { useAppContext } from '../../context/AppContext';
+import { createApp, setupApp } from "../../utils/ContractOperations";
+import useAccount from '../hooks/useAccount';
 
 function CreateProject() {
 
@@ -18,6 +21,8 @@ function CreateProject() {
     const [logoToIpfs, setLogoToIpfs] = useState("")
     const imagePickerRef = useRef(null)
     const bannerPickerRef = useRef(null)
+    const { algodClient } = useAppContext()
+    const { account } = useAccount()
 
     const createProject = trpc.useMutation("project.create-project", {
         onMutate: () => {
@@ -97,48 +102,67 @@ function CreateProject() {
 
     const onSubmit = handleSubmit(async (data) => {
 
-        let bannerUrl = ''
-        let logoUrl = ''
+        try {
+            toast.loading("Deploying new crowdfunding contract...", {
+                id: "contract-toast",
+            })
+            let appId = await createApp(algodClient, account, parseInt(data.goal))
+            await setupApp(algodClient, appId, account)
+            toast.success("Contract deployed🚀", {
+                id: "contract-toast",
+            })
 
-        if (bannerToIpfs) {
-            const added = await ipfsClient.add(bannerToIpfs)
-            console.log(added)
-            bannerUrl = `https://greengo.infura-ipfs.io/ipfs/${added.path}`
+            let bannerUrl = ''
+            let logoUrl = ''
+            appId = appId.toString()
+
+            if (bannerToIpfs) {
+                const added = await ipfsClient.add(bannerToIpfs)
+                console.log(added)
+                bannerUrl = `https://greengo.infura-ipfs.io/ipfs/${added.path}`
+            }
+
+            if (logoToIpfs) {
+                const added = await ipfsClient.add(logoToIpfs)
+                console.log(added)
+                logoUrl = `https://greengo.infura-ipfs.io/ipfs/${added.path}`
+            }
+
+            createProject.mutate({
+                name: data.name,
+                email: data.email,
+                appId: appId,
+                image: logoUrl,
+                banner: bannerUrl,
+                description: data.description,
+                website: data.website,
+                twitter: data.twitter,
+                discord: data.discord,
+                start: data.start,
+                end: data.end,
+                goal: data.goal,
+            });
+
+        } catch (err) {
+            console.log(err)
+            toast.error("Whoops! Something went wrong.", {
+                id: "contract-toast",
+            })
         }
 
-        if (logoToIpfs) {
-            const added = await ipfsClient.add(logoToIpfs)
-            console.log(added)
-            logoUrl = `https://greengo.infura-ipfs.io/ipfs/${added.path}`
-        }
-
-        createProject.mutate({
-            name: data.name,
-            email: data.email,
-            image: logoUrl,
-            banner: bannerUrl,
-            description: data.description,
-            website: data.website,
-            twitter: data.twitter,
-            discord: data.discord,
-            start: data.start,
-            end: data.end,
-            goal: data.goal,
-        });
-
-        setValue("name", "")
-        setValue("email", "")
-        setValue("description", "")
-        setValue("website", "")
-        setValue("twitter", "")
-        setValue("discord", "")
-        setValue("start", "")
-        setValue("end", "")
-        setValue("goal", "")
-        setLogo("")
-        setBanner("")
-        setLogoToIpfs("")
-        setBannerToIpfs("")
+        // setValue("name", "")
+        // setValue("email", "")
+        // setValue("description", "")
+        // setValue("website", "")
+        // setValue("twitter", "")
+        // setValue("discord", "")
+        // setValue("start", "")
+        // setValue("end", "")
+        // setValue("goal", "")
+        // setLogo("")
+        // setBanner("")
+        // setLogoToIpfs("")
+        // setBannerToIpfs("")
     })
 
 
@@ -195,7 +219,7 @@ function CreateProject() {
                             <input
                                 {...register('goal', { required: true })}
                                 type="text" placeholder="10" className="input input-bordered" />
-                            <span>cUSD</span>
+                            <span>ALGO</span>
                         </label>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8 mt-5 mx-7">

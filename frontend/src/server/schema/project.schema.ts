@@ -4,6 +4,7 @@ export const createProjectSchema = z.object({
     name: z.string().min(1).max(255),
     email: z.string(),
     image: z.string(),
+    appId: z.string().min(1),
     banner: z.string(),
     description: z.string().min(1),
     website: z.string(),

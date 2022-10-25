@@ -65,6 +65,7 @@ model VerificationToken {
 model Project {
     id          String    @id @default(cuid())
     name        String
+    appId       String
     email       String?
     image       String?
     banner      String?

@@ -1,26 +1,25 @@
-from typing import Tuple, List
+from typing import Tuple
 
 from algosdk.v2client.algod import AlgodClient
 from algosdk.future import transaction
 from algosdk.logic import get_application_address
 from algosdk import account, encoding
 
-from pyteal import compileTeal, Mode
-
-from .account import Account
-from .contracts import approval_program, clear_state_program
-from .util import (
+from account import Account
+from contract import approval_program, clear_state_program
+from util import (
     waitForTransaction,
     fullyCompileContract,
-    getAppGlobalState,
 )
 
 APPROVAL_PROGRAM = b""
 CLEAR_STATE_PROGRAM = b""
 
+PLATFORM_FEE = 5_000  # 0.005 Algo
+
 
 def getContracts(client: AlgodClient) -> Tuple[bytes, bytes]:
-    """Get the compiled TEAL contracts for the auction.
+    """Get the compiled TEAL contracts for the crowdfunding.
 
     Args:
         client: An algod client that has the ability to compile TEAL programs.
@@ -36,30 +35,25 @@ def getContracts(client: AlgodClient) -> Tuple[bytes, bytes]:
         APPROVAL_PROGRAM = fullyCompileContract(client, approval_program())
         CLEAR_STATE_PROGRAM = fullyCompileContract(client, clear_state_program())
 
+    f = open("myfile.teal", "wb")
+    f.write(APPROVAL_PROGRAM)
+
     return APPROVAL_PROGRAM, CLEAR_STATE_PROGRAM
 
 
-def createCrowdfundingApp(
-    client: AlgodClient,
-    sender: Account,
-    creator: str,
-    startTime: int,
-    endTime: int,
-    goal: int,
-) -> int:
-    """Create a new auction.
+def createVotingApp(client: AlgodClient, creator: Account) -> int:
+    """Create a new voting.
 
     Args:
         client: An algod client.
-        sender: The account that will create the auction application.
         creator: The address of the creator of the crowdfunded project
-        startTime: A UNIX timestamp representing the start time of the auction.
-            This must be greater than the current UNIX timestamp.
-        endTime: A UNIX timestamp representing the end time of the auction. This
-            must be greater than startTime.
+        RegBegin: The registration begin date
+        RegEnd: The registration end date
+        VoteBegin: The voting begin date
+        VoteEnd: The voting end date
 
     Returns:
-        The ID of the newly created auction app.
+        The ID of the newly created voting app.
     """
     approval, clear = getContracts(client)
 
@@ -67,21 +61,27 @@ def createCrowdfundingApp(
     local_ints = 1
     local_bytes = 1
     global_ints = (
-        14  # 4 for setup + 10 for choices. Use a larger number for more choices.
+        24  # 4 for setup + 20 for choices. Use a larger number for more choices.
     )
-    global_bytes = 1
+    global_bytes = 2
     globalSchema = transaction.StateSchema(global_ints, global_bytes)
     localSchema = transaction.StateSchema(local_ints, local_bytes)
 
+    status = client.status()
+    regBegin = status["last-round"] + 10
+    regEnd = regBegin + 10
+    voteBegin = regEnd + 10
+    voteEnd = voteBegin + 10
+
     app_args = [
-        encoding.decode_address(creator),
-        startTime.to_bytes(8, "big"),
-        endTime.to_bytes(8, "big"),
-        goal.to_bytes(8, "big"),
+        regBegin.to_bytes(8, "big"),
+        regEnd.to_bytes(8, "big"),
+        voteBegin.to_bytes(8, "big"),
+        voteEnd.to_bytes(8, "big"),
     ]
 
     txn = transaction.ApplicationCreateTxn(
-        sender=sender.getAddress(),
+        sender=creator.getAddress(),
         on_complete=transaction.OnComplete.NoOpOC,
         approval_program=approval,
         clear_program=clear,
@@ -91,7 +91,7 @@ def createCrowdfundingApp(
         sp=client.suggested_params(),
     )
 
-    signedTxn = txn.sign(sender.getPrivateKey())
+    signedTxn = txn.sign(creator.getPrivateKey())
 
     client.send_transaction(signedTxn)
 
@@ -100,62 +100,32 @@ def createCrowdfundingApp(
     return response.applicationIndex
 
 
-def setupCrowdfundingApp(
-    client: AlgodClient,
-    appID: int,
-    sender: Account,
-) -> None:
-    """Finish setting up an auction.
-
-    This operation funds the app crowdfunding escrow account.
-    The crowdfunding must not have started yet.
-
-    The escrow account requires a total of 0.103 Algos for funding. See the code
-    below for a breakdown of this amount.
+def registerVoter(client: AlgodClient, appID: int, voter: Account) -> None:
+    """Register a voter.
 
     Args:
-        client: An algod client.
-        appID: The app ID of the auction.
-        sender: The account providing the funding for the escrow account.
+        client: An Algod client.
+        appID: The app ID of the voting.
+        voter: The account of the voter.
     """
-    appAddr = get_application_address(appID)
 
-    suggestedParams = client.suggested_params()
-
-    fundingAmount = (
-        # min account balance
-        100_000
-        # 3 * min txn fee
-        + 3 * 1_000
-    )
-
-    fundAppTxn = transaction.PaymentTxn(
-        sender=sender.getAddress(),
-        receiver=appAddr,
-        amt=fundingAmount,
-        sp=suggestedParams,
-    )
-
-    setupTxn = transaction.ApplicationCallTxn(
-        sender=sender.getAddress(),
+    appCallTxn = transaction.ApplicationCallTxn(
+        sender=voter.getAddress(),
         index=appID,
         on_complete=transaction.OnComplete.NoOpOC,
-        app_args=[b"setup"],
-        sp=suggestedParams,
+        app_args=[b"on_register"],
+        sp=client.suggested_params(),
     )
 
-    transaction.assign_group_id([fundAppTxn, setupTxn])
+    signedAppCallTxn = appCallTxn.sign(voter.getPrivateKey())
 
-    signedFundAppTxn = fundAppTxn.sign(sender.getPrivateKey())
-    signedSetupTxn = setupTxn.sign(sender.getPrivateKey())
+    client.send_transaction(signedAppCallTxn)
 
-    client.send_transactions([signedFundAppTxn, signedSetupTxn])
-
-    waitForTransaction(client, signedFundAppTxn.get_txid())
+    waitForTransaction(client, appCallTxn.get_txid())
 
 
 def sendFunds(
-    client: AlgodClient, appID: int, funder: Account, fundAmount: int
+    client: AlgodClient, appID: int, funder: Account, platform: Account, fundAmount: int
 ) -> None:
     """Send funds to crowdfunding.
 
@@ -165,14 +135,22 @@ def sendFunds(
         funder: The account providing the funds.
         fundAmount: The amount of the fund.
     """
+
     appAddr = get_application_address(appID)
 
     suggestedParams = client.suggested_params()
 
-    payTxn = transaction.PaymentTxn(
+    fundTxn = transaction.PaymentTxn(
         sender=funder.getAddress(),
         receiver=appAddr,
-        amt=fundAmount,
+        amt=fundAmount - PLATFORM_FEE,
+        sp=suggestedParams,
+    )
+
+    payFeesTxn = transaction.PaymentTxn(
+        sender=funder.getAddress(),
+        receiver=platform.getAddress(),
+        amt=PLATFORM_FEE,
         sp=suggestedParams,
     )
 
@@ -184,12 +162,13 @@ def sendFunds(
         sp=suggestedParams,
     )
 
-    transaction.assign_group_id([payTxn, appCallTxn])
+    transaction.assign_group_id([fundTxn, payFeesTxn, appCallTxn])
 
-    signedPayTxn = payTxn.sign(funder.getPrivateKey())
+    signedFundTxn = fundTxn.sign(funder.getPrivateKey())
+    signedPayFeesTxn = payFeesTxn.sign(funder.getPrivateKey())
     signedAppCallTxn = appCallTxn.sign(funder.getPrivateKey())
 
-    client.send_transactions([signedPayTxn, signedAppCallTxn])
+    client.send_transactions([signedFundTxn, signedPayFeesTxn, signedAppCallTxn])
 
     waitForTransaction(client, appCallTxn.get_txid())
 
@@ -201,7 +180,6 @@ def sendRefunds(client: AlgodClient, appID: int, user: Account) -> None:
         client: An Algod client.
         appID: The app ID of the auction.
         funder: The account providing the funds.
-        fundAmount: The amount of the fund.
     """
     suggestedParams = client.suggested_params()
 
@@ -215,7 +193,7 @@ def sendRefunds(client: AlgodClient, appID: int, user: Account) -> None:
 
     signedRefundTxn = refundTxn.sign(user.getPrivateKey())
 
-    client.send_transactions([signedRefundTxn])
+    client.send_transaction(signedRefundTxn)
 
     waitForTransaction(client, signedRefundTxn.get_txid())
 

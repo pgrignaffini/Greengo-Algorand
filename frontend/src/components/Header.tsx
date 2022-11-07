@@ -1,4 +1,5 @@
 import Link from "next/link"
+import React from "react";
 import SearchBar from "./SearchBar"
 import { signIn, signOut, useSession } from "next-auth/react";
 import makeBlockie from "ethereum-blockies-base64"
@@ -8,8 +9,27 @@ import { useRouter } from "next/router";
 
 function Header() {
 
-    const { account, isConnected } = useAccount()
     const { data: session } = useSession();
+    let AlgoSigner: any;
+    const [account, setAccount] = React.useState();
+    const [isConnected, setIsConnected] = React.useState(false);
+
+    React.useEffect(() => {
+        checkAccount();
+    }, [])
+
+    const checkAccount = async () => {
+        if (typeof AlgoSigner !== "undefined" && typeof window !== 'undefined') {
+            await AlgoSigner.connect();
+            const accounts = await AlgoSigner.accounts({
+                ledger: "TestNet"
+            });
+            setAccount(accounts[0]["address"]);
+            setIsConnected(true);
+        }
+    }
+
+    console.log(isConnected, account)
 
     const accountModal = (
         <>
@@ -48,10 +68,7 @@ function Header() {
                             <a className="text-primary font-montserrat text-xl">FAQ</a>
                         </Link>
                     </div>
-                    {/* <div>
-                    <ChangeTheme />
-                </div> */}
-                    {!isConnected && <ConnectAlgoSigner />}
+                    {!isConnected && !session && <ConnectAlgoSigner />}
                     {session &&
                         (<div className="flex space-x-2 items-center">
                             <Link href="/profile">
@@ -66,16 +83,6 @@ function Header() {
                                 <img src={session?.user?.image as string} className="peer rounded-full w-8 h-8 cursor-pointer" />
                             </label>
                         </div>)}
-                    {account && !session &&
-                        (<div className="flex space-x-2 items-center">
-                            <button className="btn btn-sm btn-outline btn-primary ml-3 normal-case" onClick={() => signIn("discord", { callbackUrl: '/profile' })}>
-                                Sign In
-                            </button>
-                            <label htmlFor="account-modal">
-                                <img src={makeBlockie(account)} className="peer rounded-full w-8 h-8 cursor-pointer" />
-                            </label>
-                        </div>)
-                    }
                 </div>
             </div>
         </header>

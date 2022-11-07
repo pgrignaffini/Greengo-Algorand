@@ -1,5 +1,4 @@
 /*global AlgoSigner*/
-/* eslint-disable */
 import { useState, useEffect } from 'react';
 
 function useAccount() {
@@ -23,6 +22,7 @@ function useAccount() {
     };
 
     return { account, isConnected };
+
 }
 
 export default useAccount;

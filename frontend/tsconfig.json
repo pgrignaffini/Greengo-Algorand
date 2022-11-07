@@ -28,7 +28,7 @@
     "**/*.mjs",
     "src/components/ConnectAlgoSigner.jsx",
     "src/context/AppContext.js",
-    "src/components/hooks/useAccount.js"
+    "src/components/hooks/useAccount.ts"
   ],
   "exclude": [
     "node_modules"
